@@ -20,7 +20,6 @@ public class AuthService{
     public void loggingIn () throws LoginException {
         System.out.print("Enter your name: ");
         String name = userInput.nextLine();
-        List<String> lines = new ArrayList<>();
         try (BufferedReader fileReader = new BufferedReader(new FileReader("database.txt"))) {
             String line;
             while ((line = fileReader.readLine()) != null) {
@@ -47,7 +46,6 @@ public class AuthService{
         System.out.print("Enter your name: ");
         String name = userInput.nextLine();
         account.setOwnerName(name);
-        List<String> lines = new ArrayList<>();
         try (BufferedReader fileReader = new BufferedReader(new FileReader("database.txt"))) {
             String line;
             while ((line = fileReader.readLine()) != null) {
@@ -63,7 +61,7 @@ public class AuthService{
         }
         account.setAuthorized(true);
         try (FileWriter fileWriter = new FileWriter("database.txt", true)) {
-            fileWriter.write(account.getOwnerName());
+            fileWriter.write(account.getOwnerName() + ",0.0\n");
             System.out.println("You have successfully registered!");
         } catch (IOException e) {
             System.out.println("An error occurred.");

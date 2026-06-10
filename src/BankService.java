@@ -1,3 +1,4 @@
+import javax.security.auth.login.LoginException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -43,6 +44,54 @@ public class BankService{
         }
     }
 
+    public void transfer() {
+        System.out.println("Enter the amount you want to transfer: ");
+        double transferAmount = userInput.nextDouble();
+        userInput.nextLine();
+        transferValidation(transferAmount);
+        System.out.println("Enter the account you want to transfer your money to: ");
+        String transferName = userInput.nextLine();
+        double newTransferredBalance = 0;
+        boolean accountFound = false;
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader fileReader = new BufferedReader(new FileReader("database.txt"))) {
+            String line;
+            while ((line = fileReader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (transferName.equals(parts[0])) {
+                    newTransferredBalance = Double.parseDouble(parts[1]) + transferAmount;
+                    accountFound = true;
+                    lines.add(parts[0] + "," + newTransferredBalance);
+                    System.out.println("Money transferred successfully!");
+                } else {
+                    lines.add(line);
+                }
+
+            }
+            if (!accountFound) {
+                System.out.println("Account not found.");
+                throw new IOException();
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+        }
+
+        try (FileWriter writer = new FileWriter("database.txt", false)) {
+            for (String line : lines) {
+                writer.write(line + "\n");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        account.setBalance(account.getBalance() - transferAmount);
+        try {
+            saveBalance();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private void depositValidation(Double depositAmount){
         if (depositAmount <= 0) {
@@ -55,6 +104,14 @@ public class BankService{
             throw new IllegalArgumentException("Must be positive");
         }
         if (withdrawAmount > account.getBalance()) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+    }
+
+    private void transferValidation(Double transferAmount) {
+        if (transferAmount <= 0) {
+            throw new IllegalArgumentException("Must be positive");
+        } else if (transferAmount > account.getBalance()) {
             throw new IllegalArgumentException("Insufficient funds");
         }
     }

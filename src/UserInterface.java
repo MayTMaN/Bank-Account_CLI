@@ -9,7 +9,7 @@ public class UserInterface{
         System.out.println("OPTIONS");
         System.out.println("| 1. Deposit");
         System.out.println("| 2. Withdraw");
-        System.out.println("| 3. View transaction history");
+        System.out.println("| 3. Transfer");
         System.out.print("Choose an option (1-3): ");
     }
 
