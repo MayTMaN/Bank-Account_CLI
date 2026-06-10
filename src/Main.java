@@ -7,8 +7,10 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         File dataBase = new File("database.txt");
-        if (!dataBase.exists()) {
+        File transactionHistory = new File("transaction_history.txt");
+        if (!dataBase.exists() || !transactionHistory.exists()) {
             dataBase.createNewFile();
+            transactionHistory.createNewFile();
         }
         Scanner userInput = new Scanner(System.in);
         BankAccount account = new BankAccount();
@@ -31,9 +33,17 @@ public class Main {
                 }
 
                 case 2 -> {
-                    authService.signingUp();
+                    try {
+                        authService.signingUp();
+                    } catch (LoginException e) {
+                        System.out.println("Turning off application....");
+                        return;
+                    }
                 }
 
+                case 3 -> {
+
+                }
             }
         }
 

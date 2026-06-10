@@ -9,9 +9,8 @@ public class UserInterface{
         System.out.println("OPTIONS");
         System.out.println("| 1. Deposit");
         System.out.println("| 2. Withdraw");
-        System.out.println("| 3. Transfer");
-        System.out.println("| 4. View transaction history");
-        System.out.print("Choose an option (1-4): ");
+        System.out.println("| 3. View transaction history");
+        System.out.print("Choose an option (1-3): ");
     }
 
     public void authorizationMenu () {

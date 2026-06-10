@@ -1,6 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class BankService{
@@ -20,6 +23,11 @@ public class BankService{
         depositValidation(depositAmount);
         account.setBalance(account.getBalance() + depositAmount);
         System.out.print("Your balance is now: $" + account.getBalance());
+        try {
+            saveBalance();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void withdraw() {
@@ -28,6 +36,11 @@ public class BankService{
         withdrawValidation(withdrawAmount, account.getBalance());
         account.setBalance(account.getBalance() - withdrawAmount);
         System.out.print("Your balance is now: $" + account.getBalance());
+        try {
+            saveBalance();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -43,6 +56,26 @@ public class BankService{
         }
         if (withdrawAmount > account.getBalance()) {
             throw new IllegalArgumentException("Insufficient funds");
+        }
+    }
+
+    public void saveBalance() throws IOException {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("database.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (account.getOwnerName().equals(parts[0])) {
+                    lines.add(parts[0] + "," + account.getBalance());
+                } else {
+                    lines.add(line);
+                }
+            }
+        }
+        try (FileWriter writer = new FileWriter("database.txt", false)) {
+            for (String line : lines) {
+                writer.write(line + "\n");
+            }
         }
     }
 }
