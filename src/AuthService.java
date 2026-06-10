@@ -7,12 +7,12 @@ import java.util.Scanner;
 
 public class AuthService{
 
-    Scanner userInput = new Scanner(System.in);
-
     private final BankAccount account;
+    private final Scanner userInput;
 
-    public AuthService(BankAccount account) {
+    public AuthService(BankAccount account, Scanner userInput) {
         this.account = account;
+        this.userInput = userInput;
     }
 
     public void loggingIn () throws LoginException {
@@ -39,7 +39,7 @@ public class AuthService{
 
     public void signingUp () {
         System.out.print("Enter your name: ");
-        String name = account.userInput.nextLine();
+        String name = userInput.nextLine();
         account.setOwnerName(name);
         try (BufferedReader fileReader = new BufferedReader(new FileReader("database.txt"))) {
             String line;

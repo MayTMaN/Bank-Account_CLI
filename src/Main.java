@@ -12,8 +12,8 @@ public class Main {
         }
         Scanner userInput = new Scanner(System.in);
         BankAccount account = new BankAccount();
-        BankService bankService = new BankService(account);
-        AuthService authService = new AuthService(account);
+        BankService bankService = new BankService(account,userInput);
+        AuthService authService = new AuthService(account,userInput);
         UserInterface userInterface = new UserInterface();
 
         if (!account.isAuthorized()) {
@@ -44,11 +44,11 @@ public class Main {
 
         switch (choice) {
             case 1 -> {
-                bankService.deposit(account.getBalance());
+                bankService.deposit();
             }
 
             case 2 -> {
-                bankService.withdraw(account.getBalance());
+                bankService.withdraw();
             }
         }
     }

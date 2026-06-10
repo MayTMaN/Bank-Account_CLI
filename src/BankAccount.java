@@ -2,8 +2,6 @@ import java.util.Scanner;
 
 public class BankAccount {
 
-    Scanner userInput = new Scanner(System.in);
-
     private boolean isAuthorized = false;
     private String ownerName;
     private double balance = 0;

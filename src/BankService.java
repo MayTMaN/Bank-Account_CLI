@@ -5,16 +5,16 @@ import java.util.Scanner;
 
 public class BankService{
 
-    Scanner userInput = new Scanner(System.in);
-
     private final BankAccount account;
+    private final Scanner userInput;
 
-    public BankService(BankAccount account) {
+    public BankService(BankAccount account, Scanner userInput) {
         this.account = account;
+        this.userInput = userInput;
     }
 
 
-    public void deposit(double balance) {
+    public void deposit() {
         System.out.print("Enter the amount you want to deposit: ");
         double depositAmount = userInput.nextDouble();
         depositValidation(depositAmount);
@@ -22,10 +22,10 @@ public class BankService{
         System.out.print("Your balance is now: $" + account.getBalance());
     }
 
-    public void withdraw(double balance) {
+    public void withdraw() {
         System.out.print("Enter the amount you want to withdraw: ");
         double withdrawAmount = userInput.nextDouble();
-        withdrawValidation(withdrawAmount, balance);
+        withdrawValidation(withdrawAmount, account.getBalance());
         account.setBalance(account.getBalance() - withdrawAmount);
         System.out.print("Your balance is now: $" + account.getBalance());
     }
