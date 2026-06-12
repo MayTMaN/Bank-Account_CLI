@@ -1,4 +1,4 @@
-import java.util.Scanner;
+package com.bankapp.model;
 
 public class BankAccount {
 

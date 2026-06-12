@@ -1,4 +1,4 @@
-import java.util.Scanner;
+package com.bankapp.ui;
 
 public class UserInterface{
 

@@ -1,8 +1,15 @@
+package com.bankapp;
+
+import com.bankapp.model.BankAccount;
+import com.bankapp.service.AuthService;
+import com.bankapp.service.BankService;
+import com.bankapp.ui.UserInterface;
+
 import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.util.Scanner;
 
-public class Main {
+public class main {
 
     public static void main(String[] args) throws IOException {
 

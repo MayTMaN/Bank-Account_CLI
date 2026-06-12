@@ -1,10 +1,12 @@
+package com.bankapp.service;
+
+import com.bankapp.model.BankAccount;
+
 import javax.security.auth.login.LoginException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class AuthService{
