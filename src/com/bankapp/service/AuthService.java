@@ -1,73 +1,63 @@
 package com.bankapp.service;
 
 import com.bankapp.model.BankAccount;
+import com.bankapp.repository.AccountRepository;
 
 import javax.security.auth.login.LoginException;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class AuthService{
 
+    private boolean isAuthorized = false;
     private final BankAccount account;
     private final Scanner userInput;
+    private final AccountRepository accountRepository;
 
-    public AuthService(BankAccount account, Scanner userInput) {
+    public AuthService(BankAccount account, Scanner userInput, AccountRepository accountRepository) {
         this.account = account;
         this.userInput = userInput;
+        this.accountRepository = accountRepository;
     }
+
+    public void setAuthorized (boolean isAuthorized) {
+        this.isAuthorized = isAuthorized;
+    }
+
+    public boolean isAuthorized () {
+        return isAuthorized;
+    }
+
 
     public void loggingIn () throws LoginException {
         System.out.print("Enter your name: ");
         String name = userInput.nextLine();
-        try (BufferedReader fileReader = new BufferedReader(new FileReader("database.txt"))) {
-            String line;
-            while ((line = fileReader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (name.equals(parts[0])) {
-                    System.out.println("You've successfully logged in!");
-                    account.setOwnerName(name);
-                    account.setBalance(Double.parseDouble(parts[1]));
-                    account.setAuthorized(true);
-                    break;
-                }
-            }
-            if(!account.isAuthorized()){
-                System.out.println("Account " + name  + " doesnt exist.");
-                throw new LoginException();
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
+        BankAccount found = accountRepository.findByName(name);
+        if(found != null) {
+            System.out.println("You've successfully logged in!");
+            account.setOwnerName(found.getOwnerName());
+            account.setBalance(found.getBalance());
+            isAuthorized = true;
+        } else {
+            System.out.println("Account " + name  + " doesnt exist.");
             throw new LoginException();
         }
+
     }
 
     public void signingUp () throws LoginException {
         System.out.print("Enter your name: ");
         String name = userInput.nextLine();
-        account.setOwnerName(name);
-        try (BufferedReader fileReader = new BufferedReader(new FileReader("database.txt"))) {
-            String line;
-            while ((line = fileReader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (name.equals(parts[0])) {
-                    System.out.println("This account is already registered.");
-                    throw new LoginException();
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
+
+        if (accountRepository.findByName(name) != null) {
+            System.out.println("This account is already registered.");
             throw new LoginException();
         }
-        account.setAuthorized(true);
-        try (FileWriter fileWriter = new FileWriter("database.txt", true)) {
-            fileWriter.write(account.getOwnerName() + ",0.0\n");
-            System.out.println("You have successfully registered!");
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-        }
+
+        account.setOwnerName(name);
+        isAuthorized = true;
+
+        accountRepository.saveInfo(name);
+        System.out.println("You have successfully registered!");
     }
 
 }

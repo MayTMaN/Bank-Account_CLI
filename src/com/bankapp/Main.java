@@ -1,6 +1,7 @@
 package com.bankapp;
 
 import com.bankapp.model.BankAccount;
+import com.bankapp.repository.AccountRepository;
 import com.bankapp.service.AuthService;
 import com.bankapp.service.BankService;
 import com.bankapp.ui.UserInterface;
@@ -9,21 +10,24 @@ import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.util.Scanner;
 
-public class main {
+import static com.bankapp.service.util.Constants.DB_FILE;
+
+public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        File dataBase = new File("database.txt");
+        File dataBase = new File(DB_FILE);
         if (!dataBase.exists()) {
             dataBase.createNewFile();
         }
         Scanner userInput = new Scanner(System.in);
         BankAccount account = new BankAccount();
-        BankService bankService = new BankService(account,userInput);
-        AuthService authService = new AuthService(account,userInput);
+        AccountRepository accountRepository = new AccountRepository();
+        BankService bankService = new BankService(account,userInput,accountRepository);
+        AuthService authService = new AuthService(account,userInput,accountRepository);
         UserInterface userInterface = new UserInterface();
 
-        if (!account.isAuthorized()) {
+        if (!authService.isAuthorized()) {
             userInterface.authorizationMenu();
             int choice = userInput.nextInt();
             userInput.nextLine();
@@ -45,6 +49,11 @@ public class main {
                         return;
                     }
                 }
+
+                default -> {
+                    System.out.println("Option " + choice + " doesn't exist.");
+                    return;
+                }
             }
         }
 
@@ -64,6 +73,11 @@ public class main {
 
             case 3 -> {
                 bankService.transfer();
+            }
+
+            default -> {
+                System.out.println("Option " + choice + " doesn't exist.");
+                return;
             }
         }
     }

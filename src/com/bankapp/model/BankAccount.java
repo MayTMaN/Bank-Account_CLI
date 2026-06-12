@@ -2,7 +2,6 @@ package com.bankapp.model;
 
 public class BankAccount {
 
-    private boolean isAuthorized = false;
     private String ownerName;
     private double balance = 0;
 
@@ -12,14 +11,6 @@ public class BankAccount {
 
     public double getBalance() {
         return balance;
-    }
-
-    public boolean isAuthorized() {
-        return isAuthorized;
-    }
-
-    public void setAuthorized(boolean authorized) {
-        isAuthorized = authorized;
     }
 
     public String getOwnerName() {
