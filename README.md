@@ -15,25 +15,35 @@ A command-line banking application written in Java that allows users to register
 
 ```
 src/
-├── Main.java          # Entry point, wires dependencies together
-├── BankAccount.java   # Account data model (owner, balance, auth state)
-├── BankService.java   # Banking operations (deposit, withdraw, transfer)
-├── AuthService.java   # Authentication (login, sign up)
-└── UserInterface.java # CLI menus
+└── main/
+    └── java/
+        └── com/bankapp/
+            ├── Main.java                    # Entry point, wires dependencies together
+            ├── model/
+            │   └── BankAccount.java         # Account data model (owner, balance, auth state)
+            ├── repository/
+            │   └── AccountRepository.java   # Persistent file-based storage
+            ├── service/
+            │   ├── AuthService.java         # Authentication (login, sign up)
+            │   ├── BankService.java         # Banking operations (deposit, withdraw, transfer)
+            │   └── util/
+            │       └── Constants.java       # Shared constants
+            └── ui/
+                └── UserInterface.java       # CLI menus
 ```
 
 ## How to Run
 
-**Requirements:** Java 14 or higher (uses switch expressions)
+**Requirements:** Java 26+, Maven 3.6+
 
 **Compile:**
 ```bash
-javac src/*.java -d out/
+mvn compile
 ```
 
 **Run:**
 ```bash
-java -cp out Main
+mvn exec:java -Dexec.mainClass="com.bankapp.Main"
 ```
 
 ## Usage
